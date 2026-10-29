@@ -65,7 +65,7 @@ def _draw_lane_line(
     xs = np.polyval(coeffs, zs)
     pts = []
     widths = []
-    for x_m, z_m in zip(xs, zs):
+    for x_m, z_m in zip(xs, zs, strict=False):
         try:
             u, v = proj.project(x_m, z_m)
         except ValueError:
@@ -76,7 +76,7 @@ def _draw_lane_line(
         px_w = max(1, int(round(proj.f * line_width_m / z_cam)))
         pts.append((u, v))
         widths.append(px_w)
-    for (u, v), pw in zip(pts, widths):
+    for (u, v), pw in zip(pts, widths, strict=False):
         cv2.circle(img, (int(round(u)), int(round(v))), pw // 2 + 1, color_bgr, -1)
 
 

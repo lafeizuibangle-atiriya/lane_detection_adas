@@ -6,7 +6,6 @@ import numpy as np
 import pytest
 
 from adas.core.camera import GroundProjector
-from adas.core.config import AppConfig
 from adas.decision.ttc import AlarmLevel, DecisionConfig, TTCAssessor
 from adas.obstacle.distance import DistanceEstimator
 from adas.obstacle.pedestrian import Detection

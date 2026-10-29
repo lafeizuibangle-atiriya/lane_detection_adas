@@ -128,7 +128,7 @@ class HogDetector(PedestrianDetector):
             scale=1.03,
         )
         out: list[Detection] = []
-        for (x, y, w, h), s in zip(rects, weights):
+        for (x, y, w, h), s in zip(rects, weights, strict=False):
             out.append(
                 Detection(x / scale, y / scale, (x + w) / scale, (y + h) / scale, float(s))
             )

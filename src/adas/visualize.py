@@ -41,7 +41,7 @@ def draw_lane(img: np.ndarray, lane: LaneFit, proj: GroundProjector, z_near: flo
 
     color_line = (0, 220, 220) if lane.left and lane.left.extrapolated else (0, 255, 0)
     for pts, c in ((left_pts, color_line), (right_pts, color_line)):
-        for (x0, z0), (x1, z1) in zip(pts[:-1], pts[1:]):
+        for (x0, z0), (x1, z1) in zip(pts[:-1], pts[1:], strict=False):
             p0 = tuple(int(round(v)) for v in proj.project(x0, z0))
             p1 = tuple(int(round(v)) for v in proj.project(x1, z1))
             cv2.line(img, p0, p1, c, 3)

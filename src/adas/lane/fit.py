@@ -11,7 +11,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -152,16 +152,16 @@ class LaneFitter:
         cand_r = [c for c in cand_r if c is not None]
 
         best = (None, None, np.inf)
-        for l in cand_l or [None]:
-            for r in cand_r or [None]:
-                if l is None and r is None:
+        for lf in cand_l or [None]:
+            for rf in cand_r or [None]:
+                if lf is None and rf is None:
                     continue
-                err = self._pair_width_err(l, r)
+                err = self._pair_width_err(lf, rf)
                 # 单侧检出时无法验证宽度，给中性罚分，让有像素支持的候选优先
-                support = (l.n_pixels if l else 0) + (r.n_pixels if r else 0)
+                support = (lf.n_pixels if lf else 0) + (rf.n_pixels if rf else 0)
                 total = err + 1e6 / max(support, 1)
                 if total < best[2]:
-                    best = (l, r, total)
+                    best = (lf, rf, total)
 
         left, right = best[0], best[1]
         # 宽度误差过大且双侧都有候选 → 拒绝，避免把邻道线对当成本车道
@@ -169,13 +169,13 @@ class LaneFitter:
             return None, None
         return left, right
 
-    def _pair_width_err(self, l: PolyFit | None, r: PolyFit | None) -> float:
+    def _pair_width_err(self, lf: PolyFit | None, rf: PolyFit | None) -> float:
         """线对在多个纵深上与车道宽真值的平均偏差。单侧返回 0（不参与约束）。"""
-        if l is None or r is None:
+        if lf is None or rf is None:
             return 0.0
         errs = []
         for z in self._width_check_zs():
-            errs.append(abs((r.x_at(z) - l.x_at(z)) - self.road.lane_width_m))
+            errs.append(abs((rf.x_at(z) - lf.x_at(z)) - self.road.lane_width_m))
         return float(np.mean(errs))
 
     def _width_check_zs(self) -> list[float]:

@@ -63,7 +63,6 @@ def main() -> None:
 
     bird_mask = bird.warp(parts["final"])
     bird_color = bird.warp(parts["color"])
-    bird_grad = bird.warp(parts["gradient"])
 
     cell_w, cell_h = w, h
     top = np.hstack([

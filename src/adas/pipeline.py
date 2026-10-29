@@ -14,11 +14,11 @@ import numpy as np
 
 from adas.core.camera import GroundProjector
 from adas.core.config import AppConfig
-from adas.decision.ttc import AlarmLevel, DecisionConfig, TTCAssessor, Threat
+from adas.decision.ttc import AlarmLevel, DecisionConfig, Threat, TTCAssessor
 from adas.lane.binarize import binarize
 from adas.lane.fit import LaneFitter
 from adas.lane.perspective import BirdEyeView
-from adas.obstacle.distance import DistanceEstimator, TrackedPedestrian
+from adas.obstacle.distance import DistanceEstimator
 from adas.obstacle.pedestrian import Detection, PedestrianDetector
 from adas.visualize import draw_banner, draw_detections, draw_hud, draw_lane, draw_threats
 

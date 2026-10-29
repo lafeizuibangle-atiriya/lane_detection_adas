@@ -1,4 +1,5 @@
-from adas.cli import main
 import sys
+
+from adas.cli import main
 
 sys.exit(main())

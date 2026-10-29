@@ -18,8 +18,6 @@ from __future__ import annotations
 import itertools
 from dataclasses import dataclass, field
 
-import numpy as np
-
 from adas.core.camera import GroundProjector
 from adas.obstacle.pedestrian import Detection
 

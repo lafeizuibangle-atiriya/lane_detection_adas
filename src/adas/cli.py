@@ -84,7 +84,6 @@ def run_source(pipe, source, kind, fps, out_dir: Path, stem: str,
                 break
             if writer is None:
                 # 按首帧实际尺寸开 writer（灰度/异常尺寸输入在管线里已归一）
-                probe = frame if frame.ndim == 3 else cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
                 writer = cv2.VideoWriter(
                     str(out_path), cv2.VideoWriter_fourcc(*"mp4v"), fps,
                     (pipe.cfg.camera.width, pipe.cfg.camera.height),
@@ -146,8 +145,9 @@ def cmd_run(args) -> int:
     summary = run_source(pipe, source, kind, fps, Path(args.output), src.stem,
                          max_frames=args.max_frames)
     if summary["offset_median_m"] is not None:
-        logger.info("中心偏移中位 %+.3f m (抖动 %.3f m)",
-                    summary["offset_median_m"], summary["offset_jitter_m"] or -1)
+        jitter = summary["offset_jitter_m"]
+        jitter_txt = "n/a（单帧无法算抖动）" if jitter is None else f"{jitter:.3f} m"
+        logger.info("中心偏移中位 %+.3f m, 抖动 %s", summary["offset_median_m"], jitter_txt)
     return 0
 
 

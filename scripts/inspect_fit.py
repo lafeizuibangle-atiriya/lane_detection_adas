@@ -124,7 +124,7 @@ def main() -> None:
     cell_h = max(c.shape[0] for c in cells)
     cell_w = max(c.shape[1] for c in cells)
     tiles = []
-    for c, text in zip(cells, labels):
+    for c, text in zip(cells, labels, strict=False):
         canvas = np.zeros((cell_h, cell_w, 3), np.uint8)
         canvas[: c.shape[0], : c.shape[1]] = c
         cv2.rectangle(canvas, (0, 0), (cell_w, 24), (0, 0, 0), -1)
