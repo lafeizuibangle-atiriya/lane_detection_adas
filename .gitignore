@@ -10,3 +10,4 @@ data/kitti/
 .idea/
 .vscode/
 *.pt
+*.part
