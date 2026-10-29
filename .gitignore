@@ -9,3 +9,4 @@ data/kitti/
 *.egg-info/
 .idea/
 .vscode/
+*.pt
