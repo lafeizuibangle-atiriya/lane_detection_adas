@@ -212,8 +212,8 @@ class LaneFitter:
         margin = self.cfg.window_margin_px
         nz_y, nz_x = binary.nonzero()
 
-        xs: list[np.ndarray] = []
-        ys: list[np.ndarray] = []
+        rows: list[int] = []       # 有足够像素的行号（鸟瞰 y）
+        cents: list[float] = []    # 该行的质心 x
         wins: list[dict] = []
         center = base
         for i in range(self.cfg.n_windows):
@@ -227,20 +227,27 @@ class LaneFitter:
                 {"x_lo": x_lo, "x_hi": x_hi, "y_lo": y_lo, "y_hi": y_hi, "count": count}
             )
             if count >= self.cfg.min_pixels:
-                xs.append(nz_x[sel])
-                ys.append(nz_y[sel])
+                # 逐行质心：远端一行压几十个像素、近端只有几个，
+                # 直接对像素拟合会让行密度决定权重，二次项被远端带偏。
+                for y in range(y_lo, y_hi):
+                    row_sel = sel & (nz_y == y)
+                    n_row = int(row_sel.sum())
+                    if n_row >= 2:
+                        rows.append(y)
+                        cents.append(float(nz_x[row_sel].mean()))
                 center = int(np.median(nz_x[sel]))
         self.debug_windows.append({"side": side, "base": base, "windows": wins})
 
-        if not xs:
+        if len(rows) < self.cfg.n_windows * 2:
             return None
-        px = np.concatenate(xs).astype(np.float64)
-        py = np.concatenate(ys).astype(np.float64)
-        if px.size < self.cfg.min_total_pixels:
+        total_px = sum(w["count"] for w in wins)
+        if total_px < self.cfg.min_total_pixels:
             return None
 
-        ground = self.bird.bird_points_to_ground(np.stack([px, py], axis=1))
-        return self._polyfit(ground[:, 0], ground[:, 1], px.size)
+        ground = self.bird.bird_points_to_ground(
+            np.stack([np.array(cents), np.array(rows, dtype=np.float64)], axis=1)
+        )
+        return self._polyfit(ground[:, 0], ground[:, 1], total_px)
 
     def _polyfit(self, x_m: np.ndarray, z_m: np.ndarray, n_pixels: int) -> PolyFit | None:
         z_near, z_far = self.road.z_near_m, self.road.z_far_m

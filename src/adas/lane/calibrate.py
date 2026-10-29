@@ -39,7 +39,9 @@ from adas.core.config import CameraConfig
 NOMINAL_HEIGHT_M = 1.10  # 乘用车前挡风常见安装高度（米）
 NOMINAL_LANE_WIDTH_M = 3.70  # 国内车道标准宽度（米）
 
-_PITCH_RANGE = (0.5, 35.0)
+# pitch 允许负值：configs/default.yaml 的等效俯仰角是 -3.8°
+#（包含路面坡度，光轴相对路面略上仰），按旧观念"低头为正"卡正值会拒真。
+_PITCH_RANGE = (-10.0, 35.0)
 _YAW_LIMIT_S = 0.35  # ≈ 19.3°
 _OFFSET_LIMIT_M = 3.0
 
@@ -270,8 +272,8 @@ def calibrate_from_lines(
     da = a_r - a_l
     v_vp = (b_l - b_r) / da
     u_vp = a_l * v_vp + b_l
-    if not (0.0 < v_vp < cy):
-        return None  # 交点得在地平线附近，跑到画面下方说明线选反了
+    if not (0.0 < v_vp < hh * 0.95):
+        return None  # 交点得在画面内、路面以上；贴到画面底说明线选反了
     pitch = math.degrees(math.atan((cy - v_vp) / f))
     if not (_PITCH_RANGE[0] < pitch < _PITCH_RANGE[1]):
         return None
@@ -406,7 +408,7 @@ def calibrate(
                     for a, b, _ in cands
                     if (a, b) not in ((a_l, b_l), (a_r, b_r))
                     and abs(u_vp - (a * v_vp + b)) / math.hypot(1.0, a) < 30.0
-                    and 0.0 < v_vp < cy
+                    and 0.0 < v_vp < hh * 0.95
                 )
                 if consensus < 1:
                     continue
