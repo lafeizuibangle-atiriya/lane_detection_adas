@@ -1,0 +1,37 @@
+# 默认配置。所有几何量都是物理单位，换分辨率只需改 camera.width/height。
+camera:
+  width: 960
+  height: 540
+  height_m: 1.10        # 镜头离地高度（标称值，只影响米制尺度）
+  pitch_deg: -3.8       # 等效俯仰角：由人工指定边界线 + 宽度恒定准则标定（见 docs 2.4）
+  hfov_deg: 78.0        # 水平视场角（镜头标称值，作为焦距输入）
+
+road:
+  lane_width_m: 3.7
+  lane_margin_m: 0.40
+  z_near_m: 4.0         # 有效区间近端
+  z_far_m: 40.0         # 有效区间远端
+  bird_width_px: 400
+  bird_height_px: 900
+
+lane:
+  poly_order: 2
+  n_windows: 9
+  window_margin_px: 70
+  min_pixels: 50
+  min_total_pixels: 1200
+  ema_alpha: 0.30
+  max_curvature_m: 2000.0
+  seek_on_lost: true
+
+threshold:
+  white_l_min: 200
+  white_s_max: 30
+  yellow_hsv_low: [15, 70, 90]
+  yellow_hsv_high: [40, 255, 255]
+  sobel_x_low: 35
+  sobel_x_high: 255
+  grad_dir_low_deg: 0.0
+  grad_dir_high_deg: 35.0
+  sobel_ksize: 3
+  use_gradient: true

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+output/
+data/samples/videos/
+data/kitti/
+*.egg-info/
+.idea/
+.vscode/
