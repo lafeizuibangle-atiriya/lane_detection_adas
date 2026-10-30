@@ -60,7 +60,13 @@ class YoloDetector(PedestrianDetector):
         imgsz: int = 640,
         device: str = "cpu",
     ) -> None:
-        from ultralytics import YOLO  # 延迟导入，HogDetector 用户不需要装 torch
+        try:
+            from ultralytics import YOLO  # 延迟导入，HogDetector 用户不需要装 torch
+        except ImportError as e:
+            raise ImportError(
+                "YOLO 后端需要 ultralytics，当前环境没装。"
+                "安装：pip install -e \".[yolo]\"；或改用 --detector hog（不依赖 torch）。"
+            ) from e
 
         self._conf = conf
         self._iou = iou

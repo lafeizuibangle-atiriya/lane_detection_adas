@@ -13,10 +13,11 @@ dependencies = [
     "pydantic>=2.7,<3",
     "PyYAML>=6.0,<7",
     "scipy>=1.11",
-    "ultralytics>=8.3,<9",
 ]
 
 [project.optional-dependencies]
+# YOLO 后端会拉 torch，体积大；不用行人检测或只想跑测试时可以不装
+yolo = ["ultralytics>=8.3,<9"]
 dev = [
     "pytest>=8.0",
     "pytest-cov>=5.0",

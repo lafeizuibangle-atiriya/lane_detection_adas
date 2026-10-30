@@ -11,3 +11,4 @@ data/kitti/
 .vscode/
 *.pt
 *.part
+.coverage
