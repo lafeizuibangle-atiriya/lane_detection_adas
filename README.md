@@ -1,5 +1,12 @@
 # 车道线识别与行人避障（单目 ADAS 原型）
 
+[![CI](https://github.com/lafeizuibangle-atiriya/lane_detection_adas/actions/workflows/ci.yml/badge.svg)](https://github.com/lafeizuibangle-atiriya/lane_detection_adas/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?logo=opencv&logoColor=white)
+![YOLOv8](https://img.shields.io/badge/YOLO-v8-FFCC00)
+![ADAS](https://img.shields.io/badge/ADAS-Monocular-1f6feb)
+![pytest](https://img.shields.io/badge/pytest-45%20tests-4B8BBE)
+
 用一台普通单目相机做两件事：认出车道线并给出横向偏移、曲率半径；认出画面里的行人，估算距离，按碰撞时间（TTC）分四级告警。
 
 不依赖深度学习做车道线——这套管线是传统视觉加几何投影，可以逐环节量出误差。行人检测用现成的 YOLOv8n 权重，不重新训练。
